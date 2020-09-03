@@ -1,0 +1,4 @@
+# Highway Traffic Accident Classification
+We propose a simple classification framework to classify highway traffic accident scenes with images captured by those on-vehicle cameras equipped on smart cars. The classification results can be used for traffic accident detection, accident impact prediction, and traffic emergency response management. We classify traffic accidents into three top categories--accident location, people involvement, and potential risk--using a variation of logistic regression methods. The traffic accident datasets are collected from the Internet, mainly extracted from video sequences of traffic accidents. The experimental results indicate that logistic regression methods are able to produce satisfactory classification results, with accuracy up to 95\% in some categories.
+
+#language: MATLAB
