@@ -1,0 +1,54 @@
+% San Yeung, Missouri S&T 
+% 4-18-2017
+% CS 6001 Assignment 6 - Segment classification using logistic regression. 
+
+clc;
+close all;
+disp('Logistic regression model');
+
+%% Data preprocessing.
+if exist('X','var')==0
+    data_preprocessing;
+end
+
+%% Training and learning
+for i = 1:CVO.NumTestSets
+    
+    var_prior = [];
+    D = size(X,1);
+    initial_phi = rand(D,1);
+    [predictions,phi] = fit_logr(X,w,var_prior,X_test,initial_phi, 0);
+
+    disp(['Iteration ', num2str(i)]);
+    %% Learning phase: to learn the parameters to the sigmoid function by fitting
+    %  a logistic regression model.
+    var_prior = [];
+    D = size(X,1);
+    initial_psi = rand(D,1);
+    X_k = X(:,CVO.training(i));
+    w_k = w(CVO.training(i),:);
+    X_test_k = X(:,CVO.test(i));
+    [predictions,psi] = fit_dlogr (X_k, w_k, var_prior, X_test_k, initial_psi, 0);
+
+    %% Evaluation phase.
+    miss_detection = 0;
+    false_alarm = 0;
+    w_gt_k = w(CVO.test(i),:);
+    for ii = 1:size(predictions,2)
+        if (predictions(ii) >= 0.5) && (w_gt_k(ii) == 0)
+            % predicted class = 1
+            false_alarm = false_alarm+1;
+        elseif (predictions(ii) < 0.5) && (w_gt_k(ii) == 1)
+            % predicted class = 0
+            miss_detection = miss_detection+1;
+        end
+    end
+    miss_detection = miss_detection/size(predictions,2);
+    avg_miss_detection = avg_miss_detection + miss_detection;
+    false_alarm = false_alarm/size(predictions,2);
+    avg_false_alarm = avg_false_alarm + false_alarm;
+end
+
+disp(['miss_detection: ',num2str(avg_miss_detection/CVO.NumTestSets)]);
+disp(['false_alarm: ',num2str(avg_false_alarm/CVO.NumTestSets)]);
+disp('End of program');
